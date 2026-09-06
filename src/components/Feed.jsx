@@ -25,7 +25,10 @@ const Feed = () => {
     getFeeds()
   },[])
 
-  if(!feed || feed.length===0) return null;
+  if(!feed) return null;
+  if(feed.length===0){
+    return <h1>No New User Found</h1>
+  }
 
   return (
     <div className="flex flex-wrap justify-center gap-4">

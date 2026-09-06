@@ -4,15 +4,15 @@ import React, { useState } from "react";
 const UserCard = ({ user }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isActioned, setIsActioned] = useState(false);
-  const { firstName, lastName, skills, photoUrl, about, age, gender, Skills, Bio } = user;
+  const { _id,firstName, lastName, skills, photoUrl, about, age, gender, Skills, Bio } = user;
   const userSkills = skills || Skills;
   const userAbout = about || Bio;
 
-  const handleRequest = async (status) => {
+  const handleRequest = async (status,_id) => {
     try {
       setIsSubmitting(true);
       await axios.post(
-        `http://localhost:3000/request/send/${status}/${user._id}`,
+        "http://localhost:3000/sent/request/"+status+"/"+_id,
         {},
         { withCredentials: true }
       );
@@ -65,7 +65,7 @@ const UserCard = ({ user }) => {
           <button
             className="btn btn-error"
             disabled={isSubmitting}
-            onClick={() => handleRequest("ignored")}
+            onClick={() => handleRequest("ignored",_id)}
           >
             Ignore
           </button>
@@ -73,7 +73,7 @@ const UserCard = ({ user }) => {
           <button
             className="btn btn-primary"
             disabled={isSubmitting}
-            onClick={() => handleRequest("interested")}
+            onClick={() => handleRequest("interested",_id)}
           >
             Interested
           </button>
