@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { addRequest } from '../utils/requestSlice'
+import { addRequest, removeRequest } from '../utils/requestSlice'
 import axios from 'axios'
 
 const Requests = () => {
@@ -21,15 +21,26 @@ const Requests = () => {
   }
     }
 
+    const reviewRequest=async(status,requestId)=>{
+        try{
+          await axios.post("http://localhost:3000/request/view/"+status+"/"+requestId,{},
+            {withCredentials:true})
+          dispatch(removeRequest(requestId));
+        }
+        catch(err){
+          console.error("Error: "+err.message)
+        }
+    }
+
     useEffect(()=>{
       requestConnection()
     },[])
     if(!requests) return;
     if(requests.length==0){
-      return <h1>No Request Found</h1>
+      return <h1 className="empty-state">No Request Found</h1>
     }
   return (
-    <div className="flex flex-wrap justify-center gap-6 p-6">
+    <div className="directory-grid">
       {requests.map((request) => {
         if (!request.fromUserId) {
           console.warn("Request has no populated fromUserId:", request);
@@ -52,8 +63,8 @@ const Requests = () => {
         const userSkills = skills || Skills;
         return (
           <div
-            key={_id}
-            className="card bg-base-100 w-80 shadow-xl border border-base-300 hover:shadow-2xl transition-shadow"
+            key={request._id}
+            className="card directory-card bg-base-100"
           >
             <figure className="px-4 pt-4">
               <img
@@ -80,6 +91,21 @@ const Requests = () => {
                     {skill}
                   </div>
                 ))}
+              </div>
+
+              <div className="mt-4 flex w-full gap-3">
+                <button
+                  className="btn btn-success flex-1"
+                  onClick={() => reviewRequest("accepted", request._id)}
+                >
+                  Accept
+                </button>
+                <button
+                  className="btn btn-error btn-outline flex-1"
+                  onClick={() => reviewRequest("rejected", request._id)}
+                >
+                  Reject
+                </button>
               </div>
             </div>
           </div>

@@ -25,18 +25,18 @@ const Connections = () => {
         fetchConnections()
     },[])
     if(!connections) return ;
-    if(connections.length==0){
-       return <h1>No Connections</h1>
+     if(connections.length==0){
+       return <h1 className="empty-state">No Connections</h1>
     }
 
   return (
-    <div className="flex flex-wrap justify-center gap-6 p-6">
+    <div className="directory-grid">
       {connections.map((connection) => {
         const { _id, firstName, lastName, age, gender, about, skills, photoUrl } = connection;
         return (
           <div
             key={_id}
-            className="card bg-base-100 w-80 shadow-xl border border-base-300 hover:shadow-2xl transition-shadow"
+            className="card directory-card bg-base-100"
           >
             <figure className="px-4 pt-4">
               <img
