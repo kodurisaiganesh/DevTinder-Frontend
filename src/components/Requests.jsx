@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addRequest, removeRequest } from '../utils/requestSlice'
 import axios from 'axios'
@@ -6,7 +6,7 @@ import axios from 'axios'
 const Requests = () => {
    const dispatch=useDispatch()
    const requests=useSelector((store)=>store.request)
-    const requestConnection=async()=>{
+    const requestConnection=useCallback(async()=>{
       try{
       const res=await axios.get("http://localhost:3000/user/request/received",
        {withCredentials:true}
@@ -14,12 +14,11 @@ const Requests = () => {
       console.log("Received requests API response:", res.data);
       const receivedRequests = Array.isArray(res.data?.data) ? res.data.data : [];
       dispatch(addRequest(receivedRequests));
-    }
-  
+        }
   catch(err){
     console.log("Error: "+err.message);
   }
-    }
+    }, [dispatch])
 
     const reviewRequest=async(status,requestId)=>{
         try{
@@ -34,7 +33,7 @@ const Requests = () => {
 
     useEffect(()=>{
       requestConnection()
-    },[])
+    },[requestConnection])
     if(!requests) return;
     if(requests.length==0){
       return <h1 className="empty-state">No Request Found</h1>

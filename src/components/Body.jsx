@@ -1,23 +1,22 @@
 import Navbar from './Navbar'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Footer from './Footer'
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { addUser } from '../utils/userSlice';
-import { useEffect, useState } from 'react';
+import { startTransition, useCallback, useEffect, useState } from 'react';
 const Body = () => {
   const navigate=useNavigate();
-  const location=useLocation();
   const dispatch=useDispatch();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const fetchUser=async()=>{
+  const fetchUser=useCallback(async()=>{
     try{
     const res=await axios.get("http://localhost:3000/profile",
       {withCredentials:true}
     );
     dispatch(addUser(res.data));
     setIsCheckingAuth(false);
-  }
+    }
   catch(err){
     if(err.response?.status===401){
       navigate("/login")
@@ -26,22 +25,20 @@ const Body = () => {
     console.log(err)
     setIsCheckingAuth(false);
   }
-  }
+  }, [dispatch, navigate])
   useEffect(()=>{
-    if (location.pathname === '/login' || location.pathname === '/signup') {
-      setIsCheckingAuth(false);
-      return;
-    }
-    setIsCheckingAuth(true);
-    fetchUser();
-  },[location.pathname])
+    startTransition(() => fetchUser());
+
+    const heartbeatId = setInterval(fetchUser, 60000);
+    return () => clearInterval(heartbeatId);
+  },[fetchUser])
   if (isCheckingAuth) {
     return <div className="flex min-h-screen items-center justify-center">Checking session...</div>;
   }
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
-      <main className="flex-1">
+      <main className="app-main flex-1">
         <Outlet />
       </main>
       <Footer />

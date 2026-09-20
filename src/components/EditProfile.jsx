@@ -12,12 +12,43 @@ function ProfileForm({ user }) {
   const [address, setAddress] = useState(user?.address || "");
   const [skills, setSkills] = useState(user?.Skills?.join(", ") || "");
   const [photoUrl, setPhotoUrl] = useState(user?.photoUrl || "");
+  const [photoSource, setPhotoSource] = useState(
+    user?.photoUrl?.startsWith("data:image/") ? "local" : "url"
+  );
   const [bio, setBio] = useState(user?.Bio || "");
   const [age, setAge] = useState(user?.age || "");
   const [showToast, setShowToast] = useState(false);
   const [error, setError] = useState("");
 
   const dispatch = useDispatch();
+
+  const handlePhotoUpload = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please choose an image file.");
+      return;
+    }
+
+    if (file.size > 1.5 * 1024 * 1024) {
+      setError("Please choose an image smaller than 1.5 MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (loadEvent) => {
+      const result = loadEvent.target?.result;
+      if (typeof result === "string") {
+        setPhotoUrl(result);
+        setError("");
+      } else {
+        setError("Could not read that image.");
+      }
+    };
+    reader.onerror = () => setError("Could not read that image.");
+    reader.readAsDataURL(file);
+  };
 
   const SubmitProfile = async (event) => {
     event.preventDefault();
@@ -56,13 +87,19 @@ function ProfileForm({ user }) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 my-10 md:flex-row md:items-start md:justify-center">
+    <div className="profile-editor-layout">
 
       {/* Edit Profile Form */}
-      <div className="card card-border bg-base-100 w-96">
+      <div className="card profile-form-card card-border bg-base-100">
         <div className="card-body">
 
-          <h2 className="card-title">Edit Profile</h2>
+          <div className="profile-form-heading">
+            <div>
+              <p className="profile-panel-label">PROFILE DETAILS</p>
+              <h2 className="card-title">Edit profile</h2>
+            </div>
+            <span className="profile-form-marker" aria-hidden="true">*</span>
+          </div>
 
           <form onSubmit={SubmitProfile} noValidate>
 
@@ -176,21 +213,50 @@ function ProfileForm({ user }) {
               </p>
             </fieldset>
 
-            {/* Photo URL */}
+            {/* Profile photo */}
             <fieldset className="fieldset">
               <legend className="fieldset-legend">
-                Photo URL
+                Profile photo
               </legend>
 
-              <input
-                type="url"
-                className="input"
-                placeholder="https://example.com/photo.jpg"
-                value={photoUrl}
-                onChange={(event) =>
-                  setPhotoUrl(event.target.value)
-                }
-              />
+              <div className="profile-photo-switch" role="group" aria-label="Choose photo source">
+                <button
+                  type="button"
+                  className={`profile-photo-option ${photoSource === "url" ? "is-active" : ""}`}
+                  onClick={() => setPhotoSource("url")}
+                >
+                  Photo URL
+                </button>
+                <button
+                  type="button"
+                  className={`profile-photo-option ${photoSource === "local" ? "is-active" : ""}`}
+                  onClick={() => setPhotoSource("local")}
+                >
+                  Upload from device
+                </button>
+              </div>
+
+              {photoSource === "url" ? (
+                <input
+                  key="photo-url"
+                  type="url"
+                  className="input"
+                  placeholder="https://example.com/photo.jpg"
+                  value={photoUrl.startsWith("data:image/") ? "" : photoUrl}
+                  onChange={(event) => setPhotoUrl(event.target.value)}
+                />
+              ) : (
+                <input
+                  key="photo-file"
+                  type="file"
+                  className="file-input w-full"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  onChange={handlePhotoUpload}
+                />
+              )}
+              <p className="profile-photo-help">
+                {photoSource === "local" ? "PNG, JPG, WEBP or GIF up to 1.5 MB." : "Paste a public image URL."}
+              </p>
             </fieldset>
 
             {/* Bio */}
@@ -255,7 +321,16 @@ function ProfileForm({ user }) {
       </div>
 
       {/* Live Preview */}
-      <UserCard
+      <div className="profile-preview-panel">
+        <div className="profile-preview-heading">
+          <div>
+            <p className="profile-panel-label">LIVE PREVIEW</p>
+            <h2>How you appear</h2>
+          </div>
+          <span>Public</span>
+        </div>
+        <UserCard
+        showActions={false}
         user={{
           firstName,
           lastName,
@@ -269,7 +344,7 @@ function ProfileForm({ user }) {
             .filter((skill) => skill !== ""),
         }}
       />
-
+      </div>
     </div>
   );
 }

@@ -5,10 +5,16 @@ const Profile = () => {
  const user=useSelector((store)=>store.user)
 
   return(user && (
-    <div>
-
+    <main className="profile-page">
+      <div className="profile-page-heading">
+        <div>
+          <p className="connections-eyebrow">YOUR SPACE</p>
+          <h1>Shape your profile</h1>
+          <p>Keep your details current so the right developers can find you.</p>
+        </div>
+      </div>
       <EditProfile user={user} />
-    </div>
+    </main>
   ))
 }
 

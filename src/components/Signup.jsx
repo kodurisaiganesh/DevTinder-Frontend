@@ -3,21 +3,21 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { addUser } from '../utils/userSlice';
-const Signup = () => {
 
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const[firstName,setFirstName]=useState("");
-  const[lastName,setLastName]=useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-   const handleSignup = async (event) => {
+
+  const handleSignup = async (event) => {
     event.preventDefault();
     setError("");
-
 
     try {
       setIsSubmitting(true);
@@ -30,9 +30,7 @@ const Signup = () => {
           password,
           phone: phone.trim(),
         },
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       dispatch(addUser(response.data));
@@ -45,48 +43,67 @@ const Signup = () => {
     }
   };
 
- return (
-    <div className="flex justify-center px-4 py-8 sm:py-12">
-      <div className="card card-border w-full max-w-md bg-base-100">
-        <div className="card-body">
-          <h2 className="card-title">Create your account</h2>
+  return (
+    <main className="signup-page">
+      <div className="signup-intro">
+        <p className="connections-eyebrow">WELCOME TO DEVTINDER</p>
+        <h1>Build your developer circle.</h1>
+        <p>Create a profile that helps the right people find you.</p>
+      </div>
 
-          <form onSubmit={handleSignup}>
-             <fieldset className="fieldset">
-              <legend className="fieldset-legend">FirstName</legend>
+      <div className="card signup-card card-border w-full max-w-md bg-base-100">
+        <div className="card-body">
+          <div className="signup-card-heading">
+            <div>
+              <p className="profile-panel-label">GET STARTED</p>
+              <h2 className="card-title">Create your account</h2>
+            </div>
+            <span className="profile-form-marker" aria-hidden="true">*</span>
+          </div>
+
+          <form className="signup-form" onSubmit={handleSignup}>
+            <fieldset className="fieldset signup-field">
+              <legend className="fieldset-legend">First name</legend>
               <input
                 type="text"
                 className="input"
-                placeholder="Type here"
+                placeholder="Your first name"
                 value={firstName}
                 onChange={(event) => setFirstName(event.target.value)}
+                autoComplete="given-name"
+                minLength={4}
                 required
               />
             </fieldset>
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">LastName</legend>
+
+            <fieldset className="fieldset signup-field">
+              <legend className="fieldset-legend">Last name</legend>
               <input
                 type="text"
                 className="input"
-                placeholder="Type here"
+                placeholder="Your last name"
                 value={lastName}
                 onChange={(event) => setLastName(event.target.value)}
+                autoComplete="family-name"
+                minLength={4}
                 required
               />
             </fieldset>
-            <fieldset className="fieldset">
+
+            <fieldset className="fieldset signup-field">
               <legend className="fieldset-legend">Email</legend>
               <input
                 type="email"
                 className="input"
-                placeholder="Type here"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
+                autoComplete="email"
                 required
               />
             </fieldset>
 
-            <fieldset className="fieldset">
+            <fieldset className="fieldset signup-field">
               <legend className="fieldset-legend">Phone number</legend>
               <input
                 type="tel"
@@ -98,39 +115,39 @@ const Signup = () => {
                 maxLength={10}
                 inputMode="numeric"
                 title="Enter a 10-digit phone number"
+                autoComplete="tel"
                 required
               />
             </fieldset>
 
-            <fieldset className="fieldset">
+            <fieldset className="fieldset signup-field">
               <legend className="fieldset-legend">Password</legend>
               <input
                 type="password"
                 className="input"
-                placeholder="Type here"
+                placeholder="At least 8 characters"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
+                autoComplete="new-password"
+                minLength={8}
                 required
               />
             </fieldset>
 
-            {error && <p className="text-error mt-2">{error}</p>}
+            {error && <p className="signup-error" role="alert">{error}</p>}
 
-            <div className="card-actions justify-center mt-4">
+            <div className="signup-actions card-actions justify-center">
               <button type="submit" className="btn btn-primary w-full" disabled={isSubmitting}>
                 {isSubmitting ? "Creating account..." : "Sign up"}
               </button>
             </div>
-            <Link
-              to="/login"
-              className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-lg px-4 text-sm font-semibold text-[var(--accent-dark)] transition-colors hover:bg-orange-50 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-            >
+            <Link to="/login" className="signup-login-link">
               Already have an account? Log in
             </Link>
           </form>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

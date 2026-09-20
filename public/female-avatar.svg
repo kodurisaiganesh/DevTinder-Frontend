@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+  <title id="title">Default female profile</title>
+  <desc id="desc">A simple illustrated female profile avatar</desc>
+  <rect width="640" height="640" rx="80" fill="#f8e2dc"/>
+  <circle cx="320" cy="250" r="108" fill="#e8a77f"/>
+  <path d="M178 269c-16-110 34-188 143-188 109 0 157 81 141 188-24-22-39-66-42-105-34 27-82 42-143 42-34 0-65-5-92-15-4 29-3 54-7 78Z" fill="#6b3d51"/>
+  <path d="M126 590c11-127 82-194 194-194s183 67 194 194Z" fill="#d47768"/>
+  <path d="M271 326c25 19 73 19 98 0" fill="none" stroke="#b66e5d" stroke-linecap="round" stroke-width="12"/>
+  <circle cx="278" cy="248" r="9" fill="#573445"/><circle cx="362" cy="248" r="9" fill="#573445"/>
+</svg>

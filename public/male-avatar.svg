@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" role="img" aria-labelledby="title desc">
+  <title id="title">Default male profile</title>
+  <desc id="desc">A simple illustrated male profile avatar</desc>
+  <rect width="640" height="640" rx="80" fill="#dceeff"/>
+  <circle cx="320" cy="250" r="112" fill="#f1b78f"/>
+  <path d="M205 245c0-112 57-164 119-164 83 0 130 63 120 168-30-39-70-54-116-54-42 0-83 17-123 50Z" fill="#263a4a"/>
+  <path d="M128 590c8-126 80-194 192-194s184 68 192 194Z" fill="#2867a8"/>
+  <path d="M270 326c25 20 75 20 100 0" fill="none" stroke="#b66e5d" stroke-linecap="round" stroke-width="12"/>
+  <circle cx="278" cy="248" r="9" fill="#263a4a"/><circle cx="362" cy="248" r="9" fill="#263a4a"/>
+</svg>

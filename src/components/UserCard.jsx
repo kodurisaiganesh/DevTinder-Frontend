@@ -1,12 +1,17 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, showActions = true }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isActioned, setIsActioned] = useState(false);
+  const navigate = useNavigate();
   const { _id,firstName, lastName, skills, photoUrl, about, age, gender, Skills, Bio } = user;
   const userSkills = skills || Skills;
   const userAbout = about || Bio;
+  const fallbackImage = gender?.toLowerCase() === "female"
+    ? "/female-avatar.svg"
+    : "/male-avatar.svg";
 
   const handleRequest = async (status,_id) => {
     try {
@@ -27,16 +32,20 @@ const UserCard = ({ user }) => {
   if (isActioned) return null;
 
   return (
-    <div className="card bg-base-100 w-70 shadow-sm">
-      <figure>
+    <div className="card home-user-card bg-base-100">
+      <figure className="home-user-card-figure">
         <img
           className="aspect-square w-full object-cover"
-          src={photoUrl}
+          src={photoUrl || fallbackImage}
           alt={`${firstName}'s profile`}
+          onError={(event) => {
+            event.currentTarget.onerror = null;
+            event.currentTarget.src = fallbackImage;
+          }}
         />
       </figure>
 
-      <div className="card-body">
+      <div className="card-body home-user-card-body">
         <h2 className="card-title">
           {firstName} {lastName}
         </h2>
@@ -49,10 +58,10 @@ const UserCard = ({ user }) => {
           </p>
         )}
 
-        {userAbout && <p>{userAbout}</p>}
+        {userAbout && <p className="home-user-card-about">{userAbout}</p>}
 
         {/* Skills */}
-        <div className="card-actions justify-end">
+        <div className="card-actions home-user-card-skills justify-end">
           {userSkills?.map((skill) => (
             <div key={skill} className="badge badge-outline">
               {skill}
@@ -60,24 +69,32 @@ const UserCard = ({ user }) => {
           ))}
         </div>
 
-        {/* Buttons */}
-        <div className="flex justify-center gap-4 mt-4">
-          <button
-            className="btn btn-error"
-            disabled={isSubmitting}
-            onClick={() => handleRequest("ignored",_id)}
-          >
-            Ignore
-          </button>
+        {showActions && (
+          <div className="home-user-card-actions flex justify-center gap-4 mt-4">
+            <button
+              className="btn btn-error"
+              disabled={isSubmitting}
+              onClick={() => handleRequest("ignored",_id)}
+            >
+              Ignore
+            </button>
 
-          <button
-            className="btn btn-primary"
-            disabled={isSubmitting}
-            onClick={() => handleRequest("interested",_id)}
-          >
-            Interested
-          </button>
-        </div>
+            <button
+              className="btn btn-primary"
+              disabled={isSubmitting}
+              onClick={() => handleRequest("interested",_id)}
+            >
+              Interested
+            </button>
+            <button
+              className="btn btn-outline"
+              type="button"
+              onClick={() => navigate(`/connection/${_id}`)}
+            >
+              View profile
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
