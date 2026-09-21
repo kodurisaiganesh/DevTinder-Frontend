@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom';
 import {getFeed} from '../utils/feedSlice'
 import UserCard from './UserCard';
+import { BASE_URL } from '../utils/constants';
 const Feed = () => {
 
   const dispatch=useDispatch();
@@ -12,7 +13,7 @@ const Feed = () => {
   const searchTerm = searchParams.get("search") || "";
   const getFeeds=useCallback(async()=>{
     try{
-    const res=await axios.get(searchTerm ? "http://localhost:3000/user/search" : "http://localhost:3000/feed", {
+    const res=await axios.get(searchTerm ? `${BASE_URL}user/search` : `${BASE_URL}feed`, {
       params: searchTerm ? { search: searchTerm } : {},
       withCredentials:true
     }

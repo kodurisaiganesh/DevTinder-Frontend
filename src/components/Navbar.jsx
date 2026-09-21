@@ -3,6 +3,7 @@ import React, { startTransition, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { removeUser } from '../utils/userSlice';
+import { BASE_URL } from '../utils/constants';
 const Navbar = () => {
 const dispatch=useDispatch();
 const navigate=useNavigate();
@@ -28,7 +29,7 @@ useEffect(() => {
 
   const timeoutId = setTimeout(async () => {
     try {
-      const res = await axios.get("http://localhost:3000/user/search", {
+      const res = await axios.get(`${BASE_URL}user/search`, {
         params: { search: query, limit: 5 },
         withCredentials: true
       });
@@ -49,7 +50,7 @@ const searchForUser = (query) => {
 
 const handleLogout=async()=>{
   try{
-  await axios.post("http://localhost:3000/logout",
+  await axios.post(`${BASE_URL}logout`,
    {},
    { withCredentials: true }
   )

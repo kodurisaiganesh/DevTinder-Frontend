@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { addUser } from '../utils/userSlice';
+import { BASE_URL } from '../utils/constants';
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -22,7 +23,7 @@ const Signup = () => {
     try {
       setIsSubmitting(true);
       const response = await axios.post(
-        "http://localhost:3000/signup",
+        `${BASE_URL}signup`,
         {
           firstName,
           lastName,

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 
 const ConnectionProfile = () => {
   const { userId } = useParams();
@@ -12,7 +13,7 @@ const ConnectionProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/user/profile/${userId}`, {
+        const response = await axios.get(`${BASE_URL}user/profile/${userId}`, {
           withCredentials: true
         });
         setProfile(response.data);
@@ -42,7 +43,7 @@ const ConnectionProfile = () => {
     try {
       setIsSubmitting(true);
       await axios.post(
-        `http://localhost:3000/sent/request/${status}/${profile._id}`,
+        `${BASE_URL}sent/request/${status}/${profile._id}`,
         {},
         { withCredentials: true }
       );

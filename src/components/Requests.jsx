@@ -2,13 +2,14 @@ import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addRequest, removeRequest } from '../utils/requestSlice'
 import axios from 'axios'
+import { BASE_URL } from '../utils/constants';
 
 const Requests = () => {
    const dispatch=useDispatch()
    const requests=useSelector((store)=>store.request)
     const requestConnection=useCallback(async()=>{
       try{
-      const res=await axios.get("http://localhost:3000/user/request/received",
+      const res=await axios.get(`${BASE_URL}user/request/received`,
        {withCredentials:true}
       )
       console.log("Received requests API response:", res.data);
@@ -22,7 +23,7 @@ const Requests = () => {
 
     const reviewRequest=async(status,requestId)=>{
         try{
-          await axios.post("http://localhost:3000/request/view/"+status+"/"+requestId,{},
+          await axios.post(`${BASE_URL}request/view/${status}/${requestId}`,{},
             {withCredentials:true})
           dispatch(removeRequest(requestId));
         }

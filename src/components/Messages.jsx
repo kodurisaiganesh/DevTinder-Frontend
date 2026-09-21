@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { startTransition, useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 
 const Messages = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const Messages = () => {
 
   const fetchConversations = useCallback(async () => {
     try {
-      const response = await axios.get("http://localhost:3000/messages", {
+      const response = await axios.get(`${BASE_URL}messages`, {
         withCredentials: true
       });
       const nextConversations = response.data.conversations;

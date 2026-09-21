@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../utils/constants";
 
 const UserCard = ({ user, showActions = true }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,7 +18,7 @@ const UserCard = ({ user, showActions = true }) => {
     try {
       setIsSubmitting(true);
       await axios.post(
-        "http://localhost:3000/sent/request/"+status+"/"+_id,
+        `${BASE_URL}sent/request/${status}/${_id}`,
         {},
         { withCredentials: true }
       );

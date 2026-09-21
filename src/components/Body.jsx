@@ -4,6 +4,7 @@ import Footer from './Footer'
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { addUser } from '../utils/userSlice';
+import { BASE_URL } from '../utils/constants';
 import { startTransition, useCallback, useEffect, useState } from 'react';
 const Body = () => {
   const navigate=useNavigate();
@@ -11,7 +12,7 @@ const Body = () => {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const fetchUser=useCallback(async()=>{
     try{
-    const res=await axios.get("http://localhost:3000/profile",
+    const res=await axios.get(`${BASE_URL}profile`,
       {withCredentials:true}
     );
     dispatch(addUser(res.data));

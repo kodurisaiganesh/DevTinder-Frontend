@@ -3,6 +3,7 @@ import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { addConnections } from '../utils/connectionsSlice';
+import { BASE_URL } from '../utils/constants';
 
 const Connections = () => {
     const dispatch=useDispatch();
@@ -10,7 +11,7 @@ const Connections = () => {
     const connections=useSelector((store)=>store.connections)
     const fetchConnections=useCallback(async()=>{
         try{
-        const res=await axios.get("http://localhost:3000/user/connections",
+        const res=await axios.get(`${BASE_URL}user/connections`,
             {withCredentials:true}
         )
         dispatch(addConnections(res.data.data));

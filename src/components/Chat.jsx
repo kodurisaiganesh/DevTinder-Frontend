@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { startTransition, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
   const { userId } = useParams();
@@ -61,10 +62,10 @@ const Chat = () => {
   const fetchMessages = useCallback(async (showLoading = false) => {
     try {
       if (showLoading) setIsLoading(true);
-      const response = await axios.get(`http://localhost:3000/messages/${userId}`, {
+      const response = await axios.get(`${BASE_URL}messages/${userId}`, {
         withCredentials: true
       });
-      const conversationsResponse = await axios.get("http://localhost:3000/messages", {
+      const conversationsResponse = await axios.get(`${BASE_URL}messages`, {
         withCredentials: true
       });
       setChatUser(response.data.user);
@@ -119,7 +120,7 @@ const Chat = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/messages/${userId}`,
+        `${BASE_URL}messages/${userId}`,
         { text: messageText },
         { withCredentials: true }
       );
