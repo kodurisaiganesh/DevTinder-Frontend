@@ -4,20 +4,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { removeUser } from '../utils/userSlice';
 import { BASE_URL } from '../utils/constants';
+import useTheme from '../utils/useTheme';
+const THEME_LABELS = { light: "Light", dark: "Dark", system: "System" };
 const Navbar = () => {
 const dispatch=useDispatch();
 const navigate=useNavigate();
 const [searchParams] = useSearchParams();
 const user=useSelector((store)=>store.user)
+const [theme, setTheme] = useTheme();
 const [searchInput, setSearchInput] = useState(searchParams.get("search") || "");
 const [suggestions, setSuggestions] = useState([]);
 
 useEffect(() => {
   const nextSearch = searchParams.get("search") || "";
-  if (nextSearch !== searchInput) {
-    startTransition(() => setSearchInput(nextSearch));
-  }
-}, [searchInput, searchParams]);
+  startTransition(() => setSearchInput((current) => (current === nextSearch ? current : nextSearch)));
+}, [searchParams]);
 
 useEffect(() => {
   const query = searchInput.trim();
@@ -132,6 +133,24 @@ catch
       <button type="button" onClick={handleLogout}>Logout</button>
     </nav>
   )}
+  <div className="dropdown dropdown-end">
+    <div tabIndex={0} role="button" className="btn btn-ghost btn-sm" aria-label="Change theme">
+      {THEME_LABELS[theme]}
+    </div>
+    <ul tabIndex={-1} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-32 p-2 shadow">
+      {Object.entries(THEME_LABELS).map(([value, label]) => (
+        <li key={value}>
+          <button
+            type="button"
+            className={theme === value ? "active" : ""}
+            onClick={() => setTheme(value)}
+          >
+            {label}
+          </button>
+        </li>
+      ))}
+    </ul>
+  </div>
   {user && <div className="flex items-center gap-2">
     <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button" className="btn btn-ghost h-auto min-h-10 gap-2 px-2 sm:px-3">
